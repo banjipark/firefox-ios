@@ -125,6 +125,26 @@ extension BrowserViewController: URLBarDelegate {
         presentFakespotViewController()
     }
 
+    func urlBarDidSwipe(_ urlBar: URLBarView, recognizer: UISwipeGestureRecognizer) {
+        guard
+            let selectedTab = tabManager.selectedTab
+        else {
+            logger.log("No tab selected", level: .warning, category: .tabs)
+            return
+        }
+
+        var tabToSelect: Tab?
+        if recognizer.direction == .left {
+            tabToSelect = tabManager.normalTabs.elementAfter(selectedTab)
+        } else if recognizer.direction == .right {
+            tabToSelect = tabManager.normalTabs.elementBefore(selectedTab)
+        }
+
+        if let tabToSelect {
+            tabManager.selectTab(tabToSelect, previous: selectedTab)
+        }
+    }
+
     func urlBarDidPressQRButton(_ urlBar: URLBarView) {
         let qrCodeViewController = QRCodeViewController()
         qrCodeViewController.qrCodeDelegate = self

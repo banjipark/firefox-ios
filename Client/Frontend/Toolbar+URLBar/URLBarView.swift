@@ -47,6 +47,7 @@ protocol URLBarDelegate: AnyObject {
     func urlBarDidBeginDragInteraction(_ urlBar: URLBarView)
     func urlBarDidPressShare(_ urlBar: URLBarView, shareView: UIView)
     func urlBarDidPressShoppingCart(_ urlBar: URLBarView, shoppingCart: UIButton)
+    func urlBarDidSwipe(_ urlBar: URLBarView, recognizer: UISwipeGestureRecognizer)
 }
 
 protocol URLBarViewProtocol {
@@ -773,6 +774,10 @@ extension URLBarView: TabLocationViewDelegate {
 
     func tabLocationViewDidTapShield(_ tabLocationView: TabLocationView) {
         delegate?.urlBarDidTapShield(self)
+    }
+
+    func tabLocationViewDidSwipeLocation(_ tabLocationView: TabLocationView, recognizer: UISwipeGestureRecognizer) {
+        delegate?.urlBarDidSwipe(self, recognizer: recognizer)
     }
 }
 

@@ -21,6 +21,7 @@ protocol TabLocationViewDelegate: AnyObject {
     func tabLocationViewDidLongPressReaderMode(_ tabLocationView: TabLocationView) -> Bool
     func tabLocationViewDidLongPressReload(_ tabLocationView: TabLocationView)
     func tabLocationViewLocationAccessibilityActions(_ tabLocationView: TabLocationView) -> [UIAccessibilityCustomAction]?
+    func tabLocationViewDidSwipeLocation(_ tabLocationView: TabLocationView, recognizer: UISwipeGestureRecognizer)
 }
 
 class TabLocationView: UIView, FeatureFlaggable {
@@ -156,8 +157,16 @@ class TabLocationView: UIView, FeatureFlaggable {
         tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapLocation))
         tapRecognizer.delegate = self
 
+        let swipeRightRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeLocation))
+        swipeRightRecognizer.direction = .right
+
+        let swipeLeftRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeLocation))
+        swipeLeftRecognizer.direction = .left
+
         addGestureRecognizer(longPressRecognizer)
         addGestureRecognizer(tapRecognizer)
+        addGestureRecognizer(swipeRightRecognizer)
+        addGestureRecognizer(swipeLeftRecognizer)
 
         let space1px = UIView.build()
         space1px.widthAnchor.constraint(equalToConstant: 1).isActive = true
@@ -253,6 +262,11 @@ class TabLocationView: UIView, FeatureFlaggable {
     @objc
     func tapLocation(_ recognizer: UITapGestureRecognizer) {
         delegate?.tabLocationViewDidTapLocation(self)
+    }
+
+    @objc
+    func swipeLocation(_ recognizer: UISwipeGestureRecognizer) {
+        delegate?.tabLocationViewDidSwipeLocation(self, recognizer: recognizer)
     }
 
     @objc
